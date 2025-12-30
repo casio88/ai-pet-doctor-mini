@@ -49,8 +49,22 @@ export default function Profile() {
           <Image src={profile.avatar} className="avatar" />
           <View className="edit-badge">✎</View>
         </View>
-        <Text className="username">{profile.name}</Text>
-        <Text className="userid">ID: {Math.floor(Math.random() * 9000) + 1000}</Text>
+        
+        {isEditing ? (
+          <View className="edit-name-box">
+            <Input 
+              className="name-input"
+              value={tempName}
+              onInput={e => setTempName(e.detail.value)}
+              focus
+            />
+            <View className="save-btn" onClick={saveProfile}>OK</View>
+          </View>
+        ) : (
+          <Text className="username" onClick={handleEditProfile}>{profile.name}</Text>
+        )}
+        
+        <Text className="userid">ID: {profile.uid || '---'}</Text>
       </View>
 
       {/* Stats */}

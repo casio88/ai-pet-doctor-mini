@@ -48,6 +48,34 @@
   margin-bottom: 10px;
 }
 
+/* Edit Mode Styles */
+.edit-name-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.name-input {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 32px;
+  color: #1e293b;
+  width: 200px;
+  text-align: center;
+}
+
+.save-btn {
+  background: #6366f1;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .userid {
   font-size: 24px;
   color: #94a3b8;
