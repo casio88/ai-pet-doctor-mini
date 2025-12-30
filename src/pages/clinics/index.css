@@ -1,0 +1,203 @@
+.container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+/* Nav Header */
+.nav-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+  height: 88px;
+}
+
+.back-btn {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  font-size: 32px;
+  color: #334155;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.back-btn:active {
+  transform: scale(0.92);
+  background: #f1f5f9;
+}
+
+.nav-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1e293b;
+  pointer-events: none;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1e293b;
+  display: block;
+}
+
+.subtitle {
+  font-size: 24px;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+.search-card {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-radius: 24px;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
+
+.search-icon {
+  font-size: 50px;
+  margin-right: 20px;
+}
+
+.search-text {
+  flex: 1;
+}
+
+.search-title {
+  font-size: 30px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.search-desc {
+  font-size: 24px;
+  opacity: 0.9;
+}
+
+.arrow {
+  font-size: 40px;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.clinic-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.clinic-img {
+  width: 100%;
+  height: 300px;
+}
+
+.clinic-info {
+  padding: 30px;
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.clinic-name {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1e293b;
+}
+
+.rating {
+  font-size: 28px;
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.tags {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background: #eff6ff;
+  color: #3b82f6;
+  padding: 6px 16px;
+  border-radius: 10px;
+  font-size: 22px;
+}
+
+.address {
+  font-size: 26px;
+  color: #64748b;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.discount-box {
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.discount-text {
+  font-size: 24px;
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  flex: 1;
+  text-align: center;
+  padding: 16px 0;
+  border-radius: 40px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.btn.nav {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.btn.call {
+  background: #3b82f6;
+  color: #fff;
+}
