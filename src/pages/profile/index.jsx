@@ -50,7 +50,7 @@ export default function Profile() {
           <View className="edit-badge">✎</View>
         </View>
         <Text className="username">{profile.name}</Text>
-        <Text className="userid">ID: 8848</Text>
+        <Text className="userid">ID: {Math.floor(Math.random() * 9000) + 1000}</Text>
       </View>
 
       {/* Stats */}
