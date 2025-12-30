@@ -12,6 +12,8 @@ export default function Profile() {
   })
   const [pets, setPets] = useState([])
   const [lang, setLang] = useState('zh')
+  
+  // 🔴 之前漏掉的变量，现在补上了！
   const [isEditing, setIsEditing] = useState(false)
   const [tempName, setTempName] = useState('')
   
