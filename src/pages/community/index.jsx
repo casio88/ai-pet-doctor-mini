@@ -4,33 +4,7 @@ import Taro, { useDidShow } from '@tarojs/taro'
 import { translations, updateTabBar } from '../../utils/i18n'
 import './index.css'
 
-// Mock Data (Updated with English placeholders)
-const MOCK_POSTS = [
-  {
-    id: 101,
-    user: "铲屎官阿强",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jack",
-    content: "我家逆子终于学会定点上厕所了！老父亲流下了感动的泪水😭",
-    image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400&h=300",
-    likes: 128,
-    comments: 32,
-    time: "2h ago",
-    tag: "日常",
-    liked: false
-  },
-  {
-    id: 102,
-    user: "猫猫教教主",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
-    content: "求助！主子最近总是半夜跑酷，有什么办法能让它晚上安分点吗？在线等，挺急的！",
-    image: null,
-    likes: 56,
-    comments: 89,
-    time: "5h ago",
-    tag: "求助",
-    liked: false
-  }
-]
+const MOCK_POSTS = []
 
 export default function Community() {
   // --- 审核模式开关 (上线后改为 false 可恢复社区功能) ---
