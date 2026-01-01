@@ -135,6 +135,10 @@
   color: #6366f1;
 }
 
+.day.today.selected .day-num {
+  color: #fff;
+}
+
 .dot {
   width: 8px;
   height: 8px;
