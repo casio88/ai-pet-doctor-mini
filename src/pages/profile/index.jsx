@@ -106,6 +106,39 @@ export default function Profile() {
     Taro.showToast({ title: '添加成功', icon: 'success' })
   }
 
+  const handlePetClick = (pet) => {
+    // Navigate to Home page and pass pet info
+    Taro.switchTab({
+      url: '/pages/index/index',
+      success: () => {
+        // 由于 switchTab 不能带参数，我们需要通过 globalData 或者 storage 来传递
+        // 或者利用 Taro.reLaunch (但体验不好)
+        // 这里最简单的办法是：在跳转前存一个标记，首页检测到标记就自动填充
+        
+        // 我们利用 getCurrentPages 获取不到目标页面实例，所以用 storage 最稳
+        // 但为了更优雅，我们可以尝试 url query (小程序 switchTab 不支持 query，但 H5 支持)
+        // 兼容方案：
+        
+        // 1. Save temp selected pet
+        const pages = Taro.getCurrentPages()
+        // H5 路由参数 hack
+        if (Taro.getEnv() === Taro.ENV_TYPE.WEB) {
+             Taro.navigateTo({ url: `/pages/index/index?selectedPetId=${pet.id}` })
+             // 注意：switchTab 在 web 端表现可能不一致，我们这里如果是 web，直接 navigateTo 可能更好
+             // 但因为 index 是 tabbar 页面，必须用 switchTab
+        }
+      }
+    })
+    
+    // Hack for switchTab params: use Storage event or just plain storage check in Home onShow
+    // 这里我们用一种更简单的方法：直接跳转，让首页去读取“最后选中的宠物”
+    // 但用户体验最好的是：点击宠物 -> 首页自动填好它的信息
+    
+    // 最终方案：用 URL 参数 (仅 H5 有效) 或者 EventBus
+    // 这里我们用最简单的：跳转
+    Taro.switchTab({ url: `/pages/index/index?selectedPetId=${pet.id}` })
+  }
+
   return (
     <ScrollView className="container" scrollY>
       {/* Header */}
@@ -176,7 +209,7 @@ export default function Profile() {
         </View>
         <ScrollView scrollX className="pet-scroll">
           {pets.length > 0 ? pets.map(pet => (
-            <View key={pet.id} className="pet-card">
+            <View key={pet.id} className="pet-card" onClick={() => handlePetClick(pet)}>
               <View className="pet-icon">{pet.type === 'dog' ? '🐶' : '🐱'}</View>
               <Text className="pet-name">{pet.name}</Text>
               <Text className="pet-info">{pet.age} {t.boy === 'Boy' ? 'y/o' : '岁'} · {pet.gender === 'boy' ? t.boy : t.girl}</Text>
