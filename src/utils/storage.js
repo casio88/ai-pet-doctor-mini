@@ -17,6 +17,18 @@ export const storage = {
     Taro.setStorageSync(KEYS.EXPENSES, newList)
     return newList
   },
+  updateExpense: (updatedExpense) => {
+    const list = storage.getExpenses()
+    const newList = list.map(item => item.id === updatedExpense.id ? updatedExpense : item)
+    Taro.setStorageSync(KEYS.EXPENSES, newList)
+    return newList
+  },
+  deleteExpense: (id) => {
+    const list = storage.getExpenses()
+    const newList = list.filter(item => item.id !== id)
+    Taro.setStorageSync(KEYS.EXPENSES, newList)
+    return newList
+  },
   
   // --- Reminders ---
   getReminders: () => {
