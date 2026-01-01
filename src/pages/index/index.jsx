@@ -3,6 +3,7 @@ import { View, Text, Image, Input, Button, ScrollView, Textarea } from '@tarojs/
 import Taro, { useDidShow } from '@tarojs/taro'
 import { translations, updateTabBar } from '../../utils/i18n'
 import { diagnose } from '../../services/ai'
+import { storage } from '../../utils/storage'
 import './index.css'
 
 // 扩展商品库，加入功能性标签
