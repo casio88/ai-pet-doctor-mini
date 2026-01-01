@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { View, Text, Image, ScrollView, Input } from '@tarojs/components'
+import { useState, useEffect } from 'react'
+import { View, Text, Image, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { translations, updateTabBar } from '../../utils/i18n'
 import './index.css'
@@ -7,16 +7,10 @@ import './index.css'
 export default function Profile() {
   const [profile, setProfile] = useState({
     name: '铲屎官',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-    uid: ''
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'
   })
   const [pets, setPets] = useState([])
   const [lang, setLang] = useState('zh')
-  
-  // 🔴 之前漏掉的变量，现在补上了！
-  const [isEditing, setIsEditing] = useState(false)
-  const [tempName, setTempName] = useState('')
-  
   const t = translations[lang].profile
 
   useDidShow(() => {
@@ -26,26 +20,9 @@ export default function Profile() {
     updateTitle(savedLang)
     updateTabBar(savedLang)
 
-    // Ensure User ID
-    let uid = Taro.getStorageSync('petUserId')
-    if (!uid) {
-      uid = Math.floor(Math.random() * 9000) + 1000
-      Taro.setStorageSync('petUserId', uid)
-    }
-
     // Load Profile
     const savedProfile = Taro.getStorageSync('petUserProfile')
-    if (savedProfile) {
-      setProfile(savedProfile)
-    } else {
-      const initial = {
-        name: '铲屎官',
-        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
-        uid: uid
-      }
-      setProfile(initial)
-      Taro.setStorageSync('petUserProfile', initial)
-    }
+    if (savedProfile) setProfile(savedProfile)
 
     // Load Pets
     const savedPets = Taro.getStorageSync('petDoctorPets')
@@ -57,15 +34,7 @@ export default function Profile() {
   }
 
   const handleEditProfile = () => {
-    setTempName(profile.name)
-    setIsEditing(true)
-  }
-
-  const saveProfile = () => {
-    const newProfile = { ...profile, name: tempName }
-    setProfile(newProfile)
-    Taro.setStorageSync('petUserProfile', newProfile)
-    setIsEditing(false)
+    Taro.showToast({ title: t.edit, icon: 'none' })
   }
 
   const navTo = (url) => {
@@ -101,15 +70,15 @@ export default function Profile() {
       {/* Stats */}
       <View className="stats-row">
         <View className="stat-item">
-          <Text className="stat-num">0</Text>
+          <Text className="stat-num">12</Text>
           <Text className="stat-label">{t.posts}</Text>
         </View>
         <View className="stat-item">
-          <Text className="stat-num">{pets.length}</Text>
+          <Text className="stat-num">3</Text>
           <Text className="stat-label">{t.pets}</Text>
         </View>
         <View className="stat-item">
-          <Text className="stat-num">0</Text>
+          <Text className="stat-num">128</Text>
           <Text className="stat-label">{t.likes}</Text>
         </View>
       </View>
@@ -124,7 +93,7 @@ export default function Profile() {
           <View className="icon-box blue">📅</View>
           <Text className="menu-text">{t.calendar}</Text>
         </View>
-        <View className="menu-item">
+        <View className="menu-item" onClick={() => Taro.showToast({ title: '功能开发中...', icon: 'none' })}>
           <View className="icon-box green">🩺</View>
           <Text className="menu-text">{t.records}</Text>
         </View>
