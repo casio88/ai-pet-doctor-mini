@@ -127,9 +127,42 @@ export default function Index() {
   }
 
   const handleTypeChange = (type) => {
-    setPetType(type)
-    Taro.setStorageSync('petType', type)
+    // Check if we have saved pets of this type
+    const savedPets = Taro.getStorageSync('petDoctorPets') || []
+    const myPets = savedPets.filter(p => p.type === type)
+
+    if (myPets.length > 0) {
+      // Show selection list
+      const itemList = myPets.map(p => `${p.name} (${p.age}岁)`)
+      itemList.push(lang === 'zh' ? '🆕 新的诊断 (不选宠物)' : '🆕 New Diagnosis')
+
+      Taro.showActionSheet({
+        itemList: itemList,
+        success: (res) => {
+          if (res.tapIndex < myPets.length) {
+            // Selected a pet
+            const p = myPets[res.tapIndex]
+            setPetType(p.type)
+            setAge(p.age)
+            Taro.showToast({ title: `已选 ${p.name}`, icon: 'none' })
+          } else {
+            // Selected "New"
+            setPetType(type)
+            setAge('')
+          }
+        },
+        fail: () => {
+          // Cancelled, just switch type
+          setPetType(type)
+        }
+      })
+    } else {
+      // No pets, just switch
+      setPetType(type)
+      setAge('')
+    }
     setActivePart('all')
+    Taro.setStorageSync('petType', type)
   }
 
   const getVisibleSymptoms = () => {
