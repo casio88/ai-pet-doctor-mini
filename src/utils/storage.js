@@ -53,6 +53,23 @@ export const storage = {
     return data
   },
 
+  // --- Records (Diagnosis) ---
+  getRecords: () => {
+    return Taro.getStorageSync('pet_records') || []
+  },
+  saveRecord: (record) => {
+    const list = storage.getRecords()
+    const newList = [record, ...list]
+    Taro.setStorageSync('pet_records', newList)
+    return newList
+  },
+  deleteRecord: (id) => {
+    const list = storage.getRecords()
+    const newList = list.filter(item => item.id !== id)
+    Taro.setStorageSync('pet_records', newList)
+    return newList
+  },
+
   // --- Clear ---
   clearAll: () => {
     Taro.clearStorageSync()
