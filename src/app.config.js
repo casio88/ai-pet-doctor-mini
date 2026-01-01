@@ -7,7 +7,8 @@ export default defineAppConfig({
     'pages/expenses/index',
     'pages/age-calculator/index',
     'pages/first-aid/index',
-    'pages/clinics/index'
+    'pages/clinics/index',
+    'pages/records/index' // 👈 必须有这一行！
   ],
   window: {
     backgroundTextStyle: 'light',
