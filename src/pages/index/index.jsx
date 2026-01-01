@@ -40,6 +40,46 @@ export default function Index() {
   const [lang, setLang] = useState('zh')
   const t = translations[lang].home
 
+  // Reminders Check
+  useEffect(() => {
+    checkReminders()
+  }, [])
+
+  const checkReminders = () => {
+    try {
+      const allReminders = Taro.getStorageSync('pet_reminders') || {}
+      
+      // Calculate dates
+      const today = new Date()
+      const tomorrow = new Date(today)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      
+      const todayStr = today.toISOString().split('T')[0]
+      const tomorrowStr = tomorrow.toISOString().split('T')[0] // Simple ISO format
+      
+      const todayTasks = allReminders[todayStr] || []
+      const tomorrowTasks = allReminders[tomorrowStr] || []
+      
+      let msg = ''
+      if (todayTasks.length > 0) {
+        msg += `📅 今天 (${todayStr}):\n${todayTasks.join('\n')}\n\n`
+      }
+      if (tomorrowTasks.length > 0) {
+        msg += `⚠️ 明天 (${tomorrowStr}):\n${tomorrowTasks.join('\n')}`
+      }
+      
+      if (msg) {
+        Taro.showModal({
+          title: '近期提醒',
+          content: msg,
+          showCancel: false,
+          confirmText: '收到',
+          confirmColor: '#6366f1'
+        })
+      }
+    } catch (e) {}
+  }
+
   useDidShow(() => {
     const savedLang = Taro.getStorageSync('petLang') || 'zh'
     setLang(savedLang)
