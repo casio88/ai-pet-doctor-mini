@@ -128,7 +128,7 @@
 .day.today {
   color: #6366f1;
   font-weight: bold;
-  border: 2px solid #e0e7ff;
+  border: 2px solid #6366f1;
 }
 
 .day.today .day-num {
