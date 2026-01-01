@@ -191,7 +191,7 @@ export default function Profile() {
           <View className="icon-box blue">📅</View>
           <Text className="menu-text">{t.calendar}</Text>
         </View>
-        <View className="menu-item" onClick={() => Taro.showToast({ title: '功能开发中...', icon: 'none' })}>
+        <View className="menu-item" onClick={() => navTo('/pages/records/index')}>
           <View className="icon-box green">🩺</View>
           <Text className="menu-text">{t.records}</Text>
         </View>
