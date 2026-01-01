@@ -95,6 +95,26 @@ export default function Index() {
     } catch (e) {}
   }, [])
 
+  // Auto-fill from Profile Pet Selection
+  useDidShow(() => {
+    try {
+      // 检查是否有传递过来的选中的宠物 (from Profile)
+      const pages = Taro.getCurrentPages()
+      const current = pages[pages.length - 1]
+      const { selectedPetId } = current.router.params
+
+      if (selectedPetId) {
+        const pets = Taro.getStorageSync('petDoctorPets') || []
+        const pet = pets.find(p => String(p.id) === String(selectedPetId))
+        if (pet) {
+          setPetType(pet.type)
+          setAge(pet.age)
+          Taro.showToast({ title: `已载入 ${pet.name}`, icon: 'success' })
+        }
+      }
+    } catch (e) {}
+  })
+
   // 当宠物类型变化时，重置推荐列表为默认（日常）
   useEffect(() => {
     resetRecommendations(petType)
