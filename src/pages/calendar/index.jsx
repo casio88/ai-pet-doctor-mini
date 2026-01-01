@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { useState } from 'react'
+import { View, Text, ScrollView, Input, Button } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { translations } from '../../utils/i18n'
 import { storage } from '../../utils/storage'
 import './index.css'
 
 export default function Calendar() {
-  const [date, setDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useState(new Date()) // The month being viewed
+  const [selectedDate, setSelectedDate] = useState(new Date()) // The specific day selected
   const [reminders, setReminders] = useState({})
+  const [newTask, setNewTask] = useState('')
   const [lang, setLang] = useState('zh')
   const t = translations[lang].calendar
 
@@ -23,38 +25,54 @@ export default function Calendar() {
     setReminders(savedReminders)
   })
 
-  // 点击日期添加事件 (简单模拟: 点击即添加 "去医院")
-  const handleDayClick = (day) => {
+  // Format date to YYYY-MM-DD
+  const formatDate = (date) => {
     const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const handleDayClick = (day) => {
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+    setSelectedDate(newDate)
+  }
+
+  const handleAddTask = () => {
+    if (!newTask.trim()) return
     
+    const dateStr = formatDate(selectedDate)
+    const newReminders = storage.saveReminder(dateStr, newTask)
+    setReminders({...newReminders})
+    setNewTask('')
+    Taro.showToast({ title: '已添加', icon: 'success' })
+  }
+
+  const handleDeleteTask = (index) => {
+    const dateStr = formatDate(selectedDate)
     Taro.showModal({
-      title: '添加提醒',
-      content: `要在 ${dateStr} 添加提醒吗？`,
-      success: function (res) {
+      title: '删除提醒',
+      content: '确定要删除这条提醒吗？',
+      success: (res) => {
         if (res.confirm) {
-          const newReminders = storage.saveReminder(dateStr, '🏥 复诊')
-          setReminders({...newReminders}) // 强制刷新
-          Taro.showToast({ title: '已添加', icon: 'success' })
+          const newReminders = storage.deleteReminder(dateStr, index)
+          setReminders({...newReminders})
         }
       }
     })
   }
 
-  const getDaysInMonth = (year, month) => {
-    return new Date(year, month + 1, 0).getDate()
-  }
-
-  const getFirstDayOfMonth = (year, month) => {
-    return new Date(year, month, 1).getDay()
+  const changeMonth = (offset) => {
+    const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + offset, 1)
+    setCurrentDate(newDate)
   }
 
   const renderCalendar = () => {
-    const year = date.getFullYear()
-    const month = date.getMonth()
-    const daysInMonth = getDaysInMonth(year, month)
-    const firstDay = getFirstDayOfMonth(year, month)
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    const firstDay = new Date(year, month, 1).getDay()
     
     const calendarDays = []
     
@@ -65,12 +83,19 @@ export default function Calendar() {
 
     // Days
     for (let i = 1; i <= daysInMonth; i++) {
-      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`
-      const hasEvent = reminders[dateStr]
-      const isToday = new Date().toDateString() === new Date(year, month, i).toDateString()
+      const thisDate = new Date(year, month, i)
+      const dateStr = formatDate(thisDate)
+      const hasEvent = reminders[dateStr] && reminders[dateStr].length > 0
+      
+      const isSelected = formatDate(selectedDate) === dateStr
+      const isToday = formatDate(new Date()) === dateStr
 
       calendarDays.push(
-        <View key={i} className={`day ${isToday ? 'today' : ''}`} onClick={() => handleDayClick(i)}>
+        <View 
+          key={i} 
+          className={`day ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`} 
+          onClick={() => handleDayClick(i)}
+        >
           <Text className="day-num">{i}</Text>
           {hasEvent && <View className="dot"></View>}
         </View>
@@ -80,12 +105,9 @@ export default function Calendar() {
     return calendarDays
   }
 
-  const getTodayTasks = () => {
-    const todayStr = new Date().toISOString().split('T')[0]
-    // 简单兼容时区，实际项目建议用 dayjs
-    const d = new Date()
-    const localStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`
-    return reminders[localStr] || []
+  const getSelectedTasks = () => {
+    const dateStr = formatDate(selectedDate)
+    return reminders[dateStr] || []
   }
 
   return (
@@ -99,7 +121,9 @@ export default function Calendar() {
 
       <View className="calendar-card">
         <View className="cal-header">
-          <Text className="cal-title">{date.getFullYear()}年 {date.getMonth() + 1}月</Text>
+          <View className="month-btn" onClick={() => changeMonth(-1)}>❮</View>
+          <Text className="cal-title">{currentDate.getFullYear()}年 {currentDate.getMonth() + 1}月</Text>
+          <View className="month-btn" onClick={() => changeMonth(1)}>❯</View>
         </View>
 
         <View className="week-row">
@@ -111,19 +135,37 @@ export default function Calendar() {
         </View>
       </View>
 
-      <View className="reminder-list">
-        <Text className="section-title">{t.todayTask}</Text>
-        {getTodayTasks().length > 0 ? (
-          getTodayTasks().map((task, idx) => (
-            <View key={idx} className="task-item">
-              <Text>✅ {task}</Text>
+      <View className="tasks-section">
+        <Text className="section-title">
+          {selectedDate.getMonth() + 1}月{selectedDate.getDate()}日 的事项
+        </Text>
+        
+        <View className="add-box">
+          <Input 
+            className="task-input"
+            placeholder="输入提醒事项 (如: 打疫苗)"
+            value={newTask}
+            onInput={e => setNewTask(e.detail.value)}
+            confirmType="done"
+            onConfirm={handleAddTask}
+          />
+          <View className="add-btn" onClick={handleAddTask}>+</View>
+        </View>
+
+        <View className="task-list">
+          {getSelectedTasks().length > 0 ? (
+            getSelectedTasks().map((task, idx) => (
+              <View key={idx} className="task-item">
+                <Text className="task-text">{task}</Text>
+                <View className="del-btn" onClick={() => handleDeleteTask(idx)}>🗑️</View>
+              </View>
+            ))
+          ) : (
+            <View className="empty-box">
+              <Text>{t.noTask}</Text>
             </View>
-          ))
-        ) : (
-          <View className="empty-box">
-            <Text>{t.noTask}</Text>
-          </View>
-        )}
+          )}
+        </View>
       </View>
     </ScrollView>
   )

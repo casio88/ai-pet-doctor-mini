@@ -1,5 +1,5 @@
 .container {
-  padding: 20px;
+  padding: 30px;
   background-color: #f8fafc;
   min-height: 100vh;
   box-sizing: border-box;
@@ -56,8 +56,22 @@
 }
 
 .cal-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 30px;
+}
+
+.month-btn {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border-radius: 50%;
+  color: #64748b;
+  font-size: 24px;
 }
 
 .cal-title {
@@ -93,6 +107,17 @@
   justify-content: center;
   border-radius: 12px;
   position: relative;
+  transition: all 0.2s;
+}
+
+.day.selected {
+  background: #6366f1;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.day.selected .day-num {
+  color: #fff;
 }
 
 .day-num {
@@ -101,13 +126,13 @@
 }
 
 .day.today {
-  background: #eff6ff;
-  color: #3b82f6;
+  color: #6366f1;
   font-weight: bold;
+  border: 2px solid #e0e7ff;
 }
 
 .day.today .day-num {
-  color: #3b82f6;
+  color: #6366f1;
 }
 
 .dot {
@@ -118,6 +143,10 @@
   margin-top: 4px;
 }
 
+.day.selected .dot {
+  background: #fff;
+}
+
 .section-title {
   font-size: 32px;
   font-weight: bold;
@@ -126,23 +155,70 @@
   display: block;
 }
 
+.add-box {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.task-input {
+  flex: 1;
+  background: #fff;
+  height: 88px;
+  border-radius: 20px;
+  padding: 0 30px;
+  font-size: 28px;
+  border: 1px solid #e2e8f0;
+}
+
+.add-btn {
+  width: 88px;
+  height: 88px;
+  background: #6366f1;
+  color: #fff;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
 .empty-box {
   background: #fff;
-  padding: 40px;
+  padding: 60px;
   text-align: center;
   border-radius: 20px;
   color: #94a3b8;
   font-size: 28px;
+  border: 2px dashed #e2e8f0;
 }
 
 .task-item {
   background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  font-size: 28px;
+  padding: 30px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-text {
+  font-size: 30px;
   color: #334155;
+  flex: 1;
+}
+
+.del-btn {
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #ef4444;
+  background: #fef2f2;
+  border-radius: 50%;
 }
