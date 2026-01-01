@@ -3,10 +3,31 @@ import Taro from '@tarojs/taro'
 const KEYS = {
   EXPENSES: 'pet_expenses',
   REMINDERS: 'pet_reminders',
-  PET_INFO: 'pet_info'
+  PET_INFO: 'pet_info',
+  RECORDS: 'pet_records' // 👈 确保有这个 Key
 }
 
 export const storage = {
+  // ... (之前的 expenses 和 reminders 代码保留) ...
+
+  // --- Records (Diagnosis) ---
+  getRecords: () => {
+    return Taro.getStorageSync(KEYS.RECORDS) || []
+  },
+  saveRecord: (record) => {
+    const list = storage.getRecords()
+    const newList = [record, ...list]
+    Taro.setStorageSync(KEYS.RECORDS, newList)
+    return newList
+  },
+  deleteRecord: (id) => {
+    const list = storage.getRecords()
+    const newList = list.filter(item => item.id !== id)
+    Taro.setStorageSync(KEYS.RECORDS, newList)
+    return newList
+  },
+
+  // ... (其他代码) ...
   // --- Expenses ---
   getExpenses: () => {
     return Taro.getStorageSync(KEYS.EXPENSES) || []
@@ -53,24 +74,6 @@ export const storage = {
     return data
   },
 
-  // --- Records (Diagnosis) ---
-  getRecords: () => {
-    return Taro.getStorageSync('pet_records') || []
-  },
-  saveRecord: (record) => {
-    const list = storage.getRecords()
-    const newList = [record, ...list]
-    Taro.setStorageSync('pet_records', newList)
-    return newList
-  },
-  deleteRecord: (id) => {
-    const list = storage.getRecords()
-    const newList = list.filter(item => item.id !== id)
-    Taro.setStorageSync('pet_records', newList)
-    return newList
-  },
-
-  // --- Clear ---
   clearAll: () => {
     Taro.clearStorageSync()
   }
