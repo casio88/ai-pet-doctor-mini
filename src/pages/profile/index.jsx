@@ -13,27 +13,23 @@ export default function Profile() {
   const [pets, setPets] = useState([])
   const [lang, setLang] = useState('zh')
   
-  // 关键变量补全
   const [isEditing, setIsEditing] = useState(false)
   const [tempName, setTempName] = useState('')
   
   const t = translations[lang].profile
 
   useDidShow(() => {
-    // Load Language
     const savedLang = Taro.getStorageSync('petLang') || 'zh'
     setLang(savedLang)
     updateTitle(savedLang)
     updateTabBar(savedLang)
 
-    // Ensure User ID
     let uid = Taro.getStorageSync('petUserId')
     if (!uid) {
       uid = Math.floor(Math.random() * 9000) + 1000
       Taro.setStorageSync('petUserId', uid)
     }
 
-    // Load Profile
     const savedProfile = Taro.getStorageSync('petUserProfile')
     if (savedProfile) {
       setProfile(savedProfile)
@@ -47,7 +43,6 @@ export default function Profile() {
       Taro.setStorageSync('petUserProfile', initial)
     }
 
-    // Load Pets
     const savedPets = Taro.getStorageSync('petDoctorPets')
     if (savedPets) setPets(savedPets)
   })
@@ -69,12 +64,18 @@ export default function Profile() {
   }
 
   const navTo = (url) => {
-    Taro.navigateTo({ url })
+    Taro.switchTab({ url }).catch(() => Taro.navigateTo({ url }))
+  }
+
+  const goHome = () => {
+    Taro.switchTab({ url: '/pages/index/index' })
+    setTimeout(() => {
+      Taro.showToast({ title: '请在首页点击"AI诊断"来添加宠物', icon: 'none', duration: 3000 })
+    }, 500)
   }
 
   return (
     <ScrollView className="container" scrollY>
-      {/* Header */}
       <View className="profile-header">
         <View className="avatar-box" onClick={handleEditProfile}>
           <Image src={profile.avatar} className="avatar" />
@@ -98,7 +99,6 @@ export default function Profile() {
         <Text className="userid">ID: {profile.uid || '---'}</Text>
       </View>
 
-      {/* Stats */}
       <View className="stats-row">
         <View className="stat-item">
           <Text className="stat-num">0</Text>
@@ -114,7 +114,6 @@ export default function Profile() {
         </View>
       </View>
 
-      {/* Menu Grid */}
       <View className="menu-grid">
         <View className="menu-item" onClick={() => navTo('/pages/expenses/index')}>
           <View className="icon-box orange">💰</View>
@@ -134,11 +133,11 @@ export default function Profile() {
         </View>
       </View>
 
-      {/* My Pets */}
       <View className="section">
         <View className="section-header">
           <Text className="section-title">{t.myPets}</Text>
-          <Text className="add-text">{t.add}</Text>
+          {/* ✅ 修复：添加了点击事件 */}
+          <Text className="add-text" onClick={goHome}>{t.add}</Text>
         </View>
         <ScrollView scrollX className="pet-scroll">
           {pets.length > 0 ? pets.map(pet => (
@@ -148,7 +147,7 @@ export default function Profile() {
               <Text className="pet-info">{pet.age} {t.boy === 'Boy' ? 'y/o' : '岁'} · {pet.gender === 'boy' ? t.boy : t.girl}</Text>
             </View>
           )) : (
-            <View className="empty-pet">
+            <View className="empty-pet" onClick={goHome}>
               <Text>{t.emptyPet}</Text>
             </View>
           )}
