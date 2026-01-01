@@ -41,6 +41,17 @@ export const storage = {
     Taro.setStorageSync(KEYS.REMINDERS, data)
     return data
   },
+  deleteReminder: (dateStr, index) => {
+    const data = storage.getReminders()
+    if (data[dateStr]) {
+      data[dateStr].splice(index, 1)
+      if (data[dateStr].length === 0) {
+        delete data[dateStr]
+      }
+      Taro.setStorageSync(KEYS.REMINDERS, data)
+    }
+    return data
+  },
 
   // --- Clear ---
   clearAll: () => {
